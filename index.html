@@ -3,15 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Birthday Surprise 🎉</title>
+  <title>Happy Birthday 🎉</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- Start Screen -->
-<div id="startScreen" onclick="startParty()">
-  🎉 Tap to Start 🎉
-</div>
 
 <!-- Balloons -->
 <div class="balloon b1"></div>
@@ -22,10 +17,46 @@
 <!-- Confetti -->
 <div id="confetti"></div>
 
-<!-- Main Card -->
-<div class="card hidden" id="card">
-  <h1>🎂 Happy Birthday 🎉</h1>
+<!-- Card -->
+<div class="card">
+  <h1>🎉 Happy Birthday 🎉</h1>
 
   <!-- Cake -->
   <div class="cake">
     <div class="candle"></div>
+    <div class="layer l1"></div>
+    <div class="layer l2"></div>
+    <div class="layer l3"></div>
+  </div>
+
+  <p class="message">
+    Wishing you a day filled with happiness, love, and sweet surprises 💖🎂
+  </p>
+</div>
+
+<!-- Music -->
+<audio id="music" autoplay loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+</audio>
+
+<script>
+  // Try to play music automatically
+  const music = document.getElementById("music");
+  music.play().catch(() => {
+    console.log("Autoplay blocked by browser");
+  });
+
+  // Auto confetti
+  const c = document.getElementById("confetti");
+  for (let i = 0; i < 180; i++) {
+    const s = document.createElement("span");
+    s.style.left = Math.random() * 100 + "vw";
+    s.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
+    s.style.animationDuration = (Math.random() * 3 + 2) + "s";
+    c.appendChild(s);
+    setTimeout(() => s.remove(), 6000);
+  }
+</script>
+
+</body>
+</html>
