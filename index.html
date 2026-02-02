@@ -1,51 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Birthday Surprise 🎉</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="light">
+
+  <!-- Theme Toggle -->
+  <div class="toggle">
+    <input type="checkbox" id="themeSwitch" onclick="toggleTheme()">
+    <label for="themeSwitch">🌙 / ☀️</label>
+  </div>
 
   <!-- Balloons -->
   <div class="balloon b1"></div>
   <div class="balloon b2"></div>
   <div class="balloon b3"></div>
 
-  <!-- Confetti container -->
+  <!-- Confetti -->
   <div id="confetti"></div>
 
   <div class="container">
-    <h1 class="title">🎂 Happy Birthday 🎉</h1>
-    <p class="subtitle">Wishing you endless joy and success 💖</p>
-    <button onclick="startCelebration()">🎁 Click for Surprise</button>
+    <h1 class="title">🎉 Happy Birthday 🎉</h1>
+
+    <!-- Cake -->
+    <div class="cake">
+      <div class="candle"></div>
+      <div class="layer layer1"></div>
+      <div class="layer layer2"></div>
+      <div class="layer layer3"></div>
+    </div>
+
+    <p class="subtitle">May your day be as sweet as cake 🎂</p>
+
+    <button onclick="celebrate()">🎁 Celebrate</button>
   </div>
 
-  <!-- Birthday Music -->
+  <!-- Music -->
   <audio id="music">
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
   </audio>
 
   <script>
-    function startCelebration() {
+    function celebrate() {
       document.getElementById("music").play();
       createConfetti();
     }
 
-    function createConfetti() {
-      const confettiContainer = document.getElementById("confetti");
-      for (let i = 0; i < 150; i++) {
-        const confetti = document.createElement("span");
-        confetti.style.left = Math.random() * 100 + "vw";
-        confetti.style.animationDuration = (Math.random() * 3 + 2) + "s";
-        confetti.style.backgroundColor =
-          "hsl(" + Math.random() * 360 + ", 100%, 50%)";
-        confettiContainer.appendChild(confetti);
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      document.body.classList.toggle("light");
+    }
 
-        setTimeout(() => confetti.remove(), 5000);
+    function createConfetti() {
+      const c = document.getElementById("confetti");
+      for (let i = 0; i < 120; i++) {
+        const s = document.createElement("span");
+        s.style.left = Math.random() * 100 + "vw";
+        s.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
+        s.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        c.appendChild(s);
+        setTimeout(() => s.remove(), 5000);
       }
     }
   </script>
 
 </body>
 </html>
+
