@@ -17,7 +17,7 @@ body {
   text-align:center;
 }
 
-#sparkleCanvas {
+#sparkleCanvas, #confettiCanvas {
   position:absolute;
   top:0;
   left:0;
@@ -77,17 +77,12 @@ body {
   from { opacity:0; }
   to { opacity:1; }
 }
-
-canvas {
-  position:absolute;
-  top:0;
-  left:0;
-}
 </style>
 </head>
 <body>
 
 <canvas id="sparkleCanvas"></canvas>
+<canvas id="confettiCanvas"></canvas>
 
 <div id="mainText">🎉 HAPPY BIRTHDAY GOWTHAM 🎉</div>
 <img id="photo" src="https://raw.githubusercontent.com/bhavanapabbathi/birthday/main/gowtham.JPG" alt="Gowtham Photo">
@@ -99,72 +94,73 @@ May this year bring you happiness, success, and everything you dream of ✨
 </div>
 
 <script>
-// CANVAS SETUP
-const canvas = document.getElementById('sparkleCanvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// SPARKLES CANVAS
+const sparkleCanvas = document.getElementById('sparkleCanvas');
+const ctxS = sparkleCanvas.getContext('2d');
+sparkleCanvas.width = window.innerWidth;
+sparkleCanvas.height = window.innerHeight;
 
 let sparkles = [];
 for(let i=0;i<200;i++){
-  sparkles.push({
-    x: Math.random()*canvas.width,
-    y: Math.random()*canvas.height,
-    r: Math.random()*2+1,
-    dx: (Math.random()-0.5)*2,
-    dy: (Math.random()-0.5)*2
-  });
+  sparkles.push({x: Math.random()*sparkleCanvas.width, y: Math.random()*sparkleCanvas.height, r: Math.random()*2+1, dx: (Math.random()-0.5)*2, dy: (Math.random()-0.5)*2});
 }
 
 function drawSparkles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctxS.clearRect(0,0,sparkleCanvas.width,sparkleCanvas.height);
   sparkles.forEach(s=>{
-    ctx.beginPath();
-    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctx.fillStyle='white';
-    ctx.fill();
-    s.x+=s.dx;
-    s.y+=s.dy;
-    if(s.x<0) s.x=canvas.width;
-    if(s.x>canvas.width) s.x=0;
-    if(s.y<0) s.y=canvas.height;
-    if(s.y>canvas.height) s.y=0;
+    ctxS.beginPath();
+    ctxS.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctxS.fillStyle='white';
+    ctxS.fill();
+    s.x+=s.dx; s.y+=s.dy;
+    if(s.x<0) s.x=sparkleCanvas.width;
+    if(s.x>sparkleCanvas.width) s.x=0;
+    if(s.y<0) s.y=sparkleCanvas.height;
+    if(s.y>sparkleCanvas.height) s.y=0;
   });
   requestAnimationFrame(drawSparkles);
 }
 drawSparkles();
 
-// SHOW HAPPY BIRTHDAY AFTER SPARKLES
+// SHOW HAPPY BIRTHDAY MESSAGE AFTER SPARKLES
 setTimeout(()=>{
   document.getElementById('mainText').style.display='block';
 },2000);
 
-// CONFETTI
+// CONFETTI CANVAS
+const confettiCanvas = document.getElementById('confettiCanvas');
+const ctxC = confettiCanvas.getContext('2d');
+confettiCanvas.width = window.innerWidth;
+confettiCanvas.height = window.innerHeight;
+
 let confetti = [];
+
 function createConfetti(){
   for(let i=0;i<150;i++){
     confetti.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
+      x: Math.random()*confettiCanvas.width,
+      y: Math.random()*confettiCanvas.height,
       r: Math.random()*6+2,
       color: "hsl("+Math.random()*360+",100%,50%)",
       speed: Math.random()*3+2
     });
   }
 }
+
 function drawConfetti(){
+  ctxC.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
   confetti.forEach(p=>{
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=p.color;
-    ctx.fill();
+    ctxC.beginPath();
+    ctxC.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctxC.fillStyle=p.color;
+    ctxC.fill();
     p.y+=p.speed;
-    if(p.y>canvas.height){p.y=0;p.x=Math.random()*canvas.width;}
+    if(p.y>confettiCanvas.height){p.y=0;p.x=Math.random()*confettiCanvas.width;}
   });
   requestAnimationFrame(drawConfetti);
 }
 
-// SHOW PHOTO + CONFETTI AFTER TEXT
+// SHOW PHOTO + CONFETTI AFTER MESSAGE
 setTimeout(()=>{
   const photo = document.getElementById('photo');
   photo.style.display='block';
@@ -173,7 +169,7 @@ setTimeout(()=>{
   document.getElementById('secretBtn').style.display='inline-block';
 },4000);
 
-// SECRET MESSAGE FUNCTION
+// SECRET MESSAGE
 function showSecret(){
   document.getElementById('secretMessage').style.display='block';
 }
@@ -181,4 +177,3 @@ function showSecret(){
 
 </body>
 </html>
-
