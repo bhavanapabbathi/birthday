@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Birthday Magic</title>
+<title>Ultimate Birthday Magic Portal</title>
 
 <style>
 body {
@@ -49,6 +49,15 @@ body {
   animation: fadeIn 2s forwards;
 }
 
+#photo {
+  display:none;
+  margin-top:20px;
+  width:200px;
+  border-radius:50%;
+  border:4px solid gold;
+  animation: popIn 1s forwards;
+}
+
 @keyframes glow {
   from { text-shadow: 0 0 10px #fff, 0 0 20px #ff00ff; }
   to { text-shadow: 0 0 20px #fff, 0 0 40px #00ffff; }
@@ -57,6 +66,11 @@ body {
 @keyframes fadeIn {
   from { opacity:0; }
   to { opacity:1; }
+}
+
+@keyframes popIn {
+  from { transform:scale(0); opacity:0; }
+  to { transform:scale(1); opacity:1; }
 }
 
 canvas {
@@ -79,40 +93,92 @@ You are my strength, my protector, and my forever best friend.<br><br>
 May this year bring you happiness, success, and everything you dream of ✨
 </div>
 
-<canvas id="confetti"></canvas>
+<img id="photo" src="Gowtham.JPG" alt="Gowtham Photo">
+
+<canvas id="magicCanvas"></canvas>
 
 <script>
-const canvas = document.getElementById("confetti");
+// Confetti + Fireworks + Stars
+const canvas = document.getElementById("magicCanvas");
 const ctx = canvas.getContext("2d");
-
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let pieces = [];
+let confetti = [];
+let fireworks = [];
+let stars = [];
 
-for(let i=0;i<200;i++){
-  pieces.push({
+// create stars
+for(let i=0;i<100;i++){
+  stars.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*1.5});
+}
+
+// create confetti
+for(let i=0;i<150;i++){
+  confetti.push({
     x:Math.random()*canvas.width,
     y:Math.random()*canvas.height,
     r:Math.random()*6+2,
     color:"hsl("+Math.random()*360+",100%,50%)",
     speed:Math.random()*3+2
   });
+});
+
+// create fireworks
+function createFirework(){
+  let x = Math.random()*canvas.width;
+  let y = Math.random()*canvas.height/2;
+  for(let i=0;i<50;i++){
+    fireworks.push({
+      x:x,
+      y:y,
+      speedX:(Math.random()-0.5)*6,
+      speedY:(Math.random()-0.5)*6,
+      radius:2,
+      life:100,
+      color:"hsl("+Math.random()*360+",100%,50%)"
+    });
+  }
 }
 
 function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  pieces.forEach(p=>{
+  ctx.fillStyle="rgba(0,0,0,0.2)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // draw stars
+  stars.forEach(s=>{
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle="white";
+    ctx.fill();
+  });
+
+  // draw confetti
+  confetti.forEach(p=>{
     ctx.beginPath();
     ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
     ctx.fillStyle=p.color;
     ctx.fill();
   });
-  update();
+
+  // draw fireworks
+  fireworks.forEach((p,index)=>{
+    p.x+=p.speedX;
+    p.y+=p.speedY;
+    p.life--;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+    ctx.fillStyle=p.color;
+    ctx.fill();
+    if(p.life<=0) fireworks.splice(index,1);
+  });
+
+  updateConfetti();
+  requestAnimationFrame(draw);
 }
 
-function update(){
-  pieces.forEach(p=>{
+function updateConfetti(){
+  confetti.forEach(p=>{
     p.y+=p.speed;
     if(p.y>canvas.height){
       p.y=0;
@@ -121,10 +187,14 @@ function update(){
   });
 }
 
-setInterval(draw,20);
+setInterval(createFirework,1000);
+draw();
 
+// Show secret message + photo
 function showSecret(){
   document.getElementById("secretMessage").style.display="block";
+  const photo = document.getElementById("photo");
+  photo.style.display="block";
 }
 </script>
 
