@@ -27,8 +27,8 @@ body {
 #mainText {
   font-size:65px;
   color:white;
-  display:none;
-  animation: glow 2s infinite alternate;
+  display:block;
+  white-space:pre;
   z-index:2;
 }
 
@@ -63,19 +63,9 @@ body {
   animation: fadeIn 2s forwards;
 }
 
-@keyframes glow {
-  from { text-shadow: 0 0 10px #fff, 0 0 20px #ff00ff; }
-  to { text-shadow: 0 0 20px #fff, 0 0 40px #00ffff; }
-}
-
 @keyframes popIn {
   from { transform:scale(0); opacity:0; }
   to { transform:scale(1); opacity:1; }
-}
-
-@keyframes fadeIn {
-  from { opacity:0; }
-  to { opacity:1; }
 }
 </style>
 </head>
@@ -84,7 +74,7 @@ body {
 <canvas id="sparkleCanvas"></canvas>
 <canvas id="confettiCanvas"></canvas>
 
-<div id="mainText">🎉 HAPPY BIRTHDAY GOWTHAM 🎉</div>
+<div id="mainText"></div>
 <img id="photo" src="https://raw.githubusercontent.com/bhavanapabbathi/birthday/main/gowtham.JPG" alt="Gowtham Photo">
 <button id="secretBtn" onclick="showSecret()">Click for Secret Message 🎁</button>
 <div id="secretMessage">
@@ -94,7 +84,7 @@ May this year bring you happiness, success, and everything you dream of ✨
 </div>
 
 <script>
-// SPARKLES CANVAS
+// ---------------- SPARKLES ----------------
 const sparkleCanvas = document.getElementById('sparkleCanvas');
 const ctxS = sparkleCanvas.getContext('2d');
 sparkleCanvas.width = window.innerWidth;
@@ -122,19 +112,31 @@ function drawSparkles(){
 }
 drawSparkles();
 
-// SHOW HAPPY BIRTHDAY MESSAGE AFTER SPARKLES
-setTimeout(()=>{
-  document.getElementById('mainText').style.display='block';
-},2000);
+// ---------------- TYPEWRITER EFFECT ----------------
+const text = "🎉 HAPPY BIRTHDAY GOWTHAM 🎉";
+const mainTextDiv = document.getElementById('mainText');
+let index = 0;
 
-// CONFETTI CANVAS
+function typeLetter(){
+  if(index < text.length){
+    mainTextDiv.textContent += text.charAt(index);
+    index++;
+    setTimeout(typeLetter, 150);
+  } else {
+    // After typing finished, show photo + confetti
+    setTimeout(showPhotoConfetti, 500);
+  }
+}
+
+setTimeout(typeLetter, 2000); // start typing after 2s sparkles
+
+// ---------------- CONFETTI ----------------
 const confettiCanvas = document.getElementById('confettiCanvas');
 const ctxC = confettiCanvas.getContext('2d');
 confettiCanvas.width = window.innerWidth;
 confettiCanvas.height = window.innerHeight;
 
 let confetti = [];
-
 function createConfetti(){
   for(let i=0;i<150;i++){
     confetti.push({
@@ -146,7 +148,6 @@ function createConfetti(){
     });
   }
 }
-
 function drawConfetti(){
   ctxC.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
   confetti.forEach(p=>{
@@ -160,16 +161,15 @@ function drawConfetti(){
   requestAnimationFrame(drawConfetti);
 }
 
-// SHOW PHOTO + CONFETTI AFTER MESSAGE
-setTimeout(()=>{
-  const photo = document.getElementById('photo');
-  photo.style.display='block';
+// ---------------- SHOW PHOTO + CONFETTI ----------------
+function showPhotoConfetti(){
+  document.getElementById('photo').style.display='block';
+  document.getElementById('secretBtn').style.display='inline-block';
   createConfetti();
   drawConfetti();
-  document.getElementById('secretBtn').style.display='inline-block';
-},4000);
+}
 
-// SECRET MESSAGE
+// ---------------- SECRET MESSAGE ----------------
 function showSecret(){
   document.getElementById('secretMessage').style.display='block';
 }
