@@ -1,99 +1,131 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Happy Birthday Gowtham</title>
+<title>Birthday Magic</title>
 
 <style>
 body {
-  margin: 0;
-  background: black;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  margin:0;
+  background:black;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
   font-family: Arial, sans-serif;
-  color: white;
+  color:white;
+  flex-direction:column;
+  text-align:center;
 }
 
-h1 {
-  position: absolute;
-  text-align: center;
-  font-size: 60px;
-  z-index: 2;
-  animation: glow 2s ease-in-out infinite alternate;
+#mainText {
+  font-size:65px;
+  animation: glow 2s infinite alternate;
+  z-index:2;
+}
+
+#secretBtn {
+  padding:15px 30px;
+  font-size:20px;
+  background:linear-gradient(45deg,#ff00ff,#00ffff);
+  border:none;
+  color:white;
+  cursor:pointer;
+  margin-top:30px;
+  border-radius:30px;
+  z-index:2;
+  transition:0.3s;
+}
+
+#secretBtn:hover {
+  transform:scale(1.1);
+}
+
+#secretMessage {
+  font-size:25px;
+  margin-top:25px;
+  display:none;
+  color:gold;
+  animation: fadeIn 2s forwards;
 }
 
 @keyframes glow {
-  from {
-    text-shadow: 0 0 10px #fff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
-  }
-  to {
-    text-shadow: 0 0 20px #fff, 0 0 30px #00ffff, 0 0 40px #00ffff;
-  }
+  from { text-shadow: 0 0 10px #fff, 0 0 20px #ff00ff; }
+  to { text-shadow: 0 0 20px #fff, 0 0 40px #00ffff; }
+}
+
+@keyframes fadeIn {
+  from { opacity:0; }
+  to { opacity:1; }
 }
 
 canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position:absolute;
+  top:0;
+  left:0;
 }
 </style>
 </head>
 
 <body>
 
-<h1>🎉 Happy Birthday Gowtham 🎉</h1>
+<div id="mainText">🎉 HAPPY BIRTHDAY GOWTHAM 🎉</div>
 
-<canvas id="fireworks"></canvas>
+<button id="secretBtn" onclick="showSecret()">Click for Secret Message 🎁</button>
+
+<div id="secretMessage">
+You are not just my brother... ❤️<br><br>
+You are my strength, my protector, and my forever best friend.<br><br>
+May this year bring you happiness, success, and everything you dream of ✨
+</div>
+
+<canvas id="confetti"></canvas>
 
 <script>
-const canvas = document.getElementById("fireworks");
+const canvas = document.getElementById("confetti");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let particles = [];
+let pieces = [];
 
-function createFirework() {
-  let x = Math.random() * canvas.width;
-  let y = Math.random() * canvas.height / 2;
-
-  for (let i = 0; i < 100; i++) {
-    particles.push({
-      x: x,
-      y: y,
-      speedX: (Math.random() - 0.5) * 6,
-      speedY: (Math.random() - 0.5) * 6,
-      radius: 2,
-      life: 100
-    });
-  }
-}
-
-function animate() {
-  ctx.fillStyle = "rgba(0,0,0,0.2)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  particles.forEach((p, index) => {
-    p.x += p.speedX;
-    p.y += p.speedY;
-    p.life--;
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-    ctx.fillStyle = "hsl(" + Math.random() * 360 + ",100%,50%)";
-    ctx.fill();
-
-    if (p.life <= 0) particles.splice(index, 1);
+for(let i=0;i<200;i++){
+  pieces.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*6+2,
+    color:"hsl("+Math.random()*360+",100%,50%)",
+    speed:Math.random()*3+2
   });
-
-  requestAnimationFrame(animate);
 }
 
-setInterval(createFirework, 1000);
-animate();
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  pieces.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.color;
+    ctx.fill();
+  });
+  update();
+}
+
+function update(){
+  pieces.forEach(p=>{
+    p.y+=p.speed;
+    if(p.y>canvas.height){
+      p.y=0;
+      p.x=Math.random()*canvas.width;
+    }
+  });
+}
+
+setInterval(draw,20);
+
+function showSecret(){
+  document.getElementById("secretMessage").style.display="block";
+}
 </script>
 
 </body>
