@@ -27,7 +27,7 @@ body {
 #mainText {
   font-size:65px;
   color:white;
-  display:block;
+  display:none;
   white-space:pre;
   z-index:2;
 }
@@ -84,15 +84,24 @@ May this year bring you happiness, success, and everything you dream of ✨
 </div>
 
 <script>
-// ---------------- SPARKLES ----------------
+// ---------------- COLORFUL SPARKLES ----------------
 const sparkleCanvas = document.getElementById('sparkleCanvas');
 const ctxS = sparkleCanvas.getContext('2d');
 sparkleCanvas.width = window.innerWidth;
 sparkleCanvas.height = window.innerHeight;
 
 let sparkles = [];
-for(let i=0;i<200;i++){
-  sparkles.push({x: Math.random()*sparkleCanvas.width, y: Math.random()*sparkleCanvas.height, r: Math.random()*2+1, dx: (Math.random()-0.5)*2, dy: (Math.random()-0.5)*2});
+for(let i=0;i<250;i++){
+  sparkles.push({
+    x: Math.random()*sparkleCanvas.width,
+    y: Math.random()*sparkleCanvas.height,
+    r: Math.random()*2+1,
+    dx: (Math.random()-0.5)*1.5,
+    dy: (Math.random()-0.5)*1.5,
+    color: `hsl(${Math.random()*360},100%,70%)`,
+    alpha: Math.random()*0.8+0.2,
+    deltaAlpha: Math.random()*0.02+0.01
+  });
 }
 
 function drawSparkles(){
@@ -100,9 +109,16 @@ function drawSparkles(){
   sparkles.forEach(s=>{
     ctxS.beginPath();
     ctxS.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctxS.fillStyle='white';
+    ctxS.fillStyle = `hsla(${Math.random()*360},100%,70%,${s.alpha})`;
     ctxS.fill();
-    s.x+=s.dx; s.y+=s.dy;
+
+    s.x += s.dx;
+    s.y += s.dy;
+
+    // twinkle effect
+    s.alpha += s.deltaAlpha;
+    if(s.alpha > 1 || s.alpha < 0.2) s.deltaAlpha *= -1;
+
     if(s.x<0) s.x=sparkleCanvas.width;
     if(s.x>sparkleCanvas.width) s.x=0;
     if(s.y<0) s.y=sparkleCanvas.height;
@@ -123,12 +139,14 @@ function typeLetter(){
     index++;
     setTimeout(typeLetter, 150);
   } else {
-    // After typing finished, show photo + confetti
     setTimeout(showPhotoConfetti, 500);
   }
 }
 
-setTimeout(typeLetter, 2000); // start typing after 2s sparkles
+setTimeout(()=>{
+  mainTextDiv.style.display='block';
+  typeLetter();
+}, 2000);
 
 // ---------------- CONFETTI ----------------
 const confettiCanvas = document.getElementById('confettiCanvas');
