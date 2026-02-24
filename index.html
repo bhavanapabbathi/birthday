@@ -1,197 +1,56 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Birthday Magic Portal</title>
-<style>
-body {
-  margin:0;
-  background:black;
-  overflow:hidden;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  font-family: Arial, sans-serif;
-  color:white;
-  flex-direction:column;
-  text-align:center;
-}
-
-#sparkleCanvas, #confettiCanvas {
-  position:absolute;
-  top:0;
-  left:0;
-  z-index:0;
-}
-
-#mainText {
-  font-size:65px;
-  color:white;
-  display:none;
-  white-space:pre;
-  z-index:2;
-}
-
-#photo {
-  display:none;
-  margin-top:20px;
-  width:200px;
-  border-radius:50%;
-  border:4px solid gold;
-  animation: popIn 1s forwards;
-  z-index:2;
-}
-
-#secretBtn {
-  padding:15px 30px;
-  font-size:20px;
-  background:linear-gradient(45deg,#ff00ff,#00ffff);
-  border:none;
-  color:white;
-  cursor:pointer;
-  margin-top:30px;
-  border-radius:30px;
-  z-index:2;
-  display:none;
-}
-
-#secretMessage {
-  font-size:25px;
-  margin-top:25px;
-  display:none;
-  color:gold;
-  animation: fadeIn 2s forwards;
-}
-
-@keyframes popIn {
-  from { transform:scale(0); opacity:0; }
-  to { transform:scale(1); opacity:1; }
-}
-</style>
+  <title>Colorful Sparkles Demo</title>
+  <style>
+    body, html { margin:0; height:100%; background:black; overflow:hidden; }
+    canvas { display:block; }
+  </style>
 </head>
 <body>
+  <canvas id="sparkleCanvas"></canvas>
+  <script>
+    const canvas = document.getElementById('sparkleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-<canvas id="sparkleCanvas"></canvas>
-<canvas id="confettiCanvas"></canvas>
+    const sparkles = [];
+    const sparkleCount = 200;
 
-<div id="mainText"></div>
-<img id="photo" src="https://raw.githubusercontent.com/bhavanapabbathi/birthday/main/gowtham.JPG" alt="Gowtham Photo">
-<button id="secretBtn" onclick="showSecret()">Click for Secret Message 🎁</button>
-<div id="secretMessage">
-You are not just my brother... ❤️<br><br>
-You are my strength, my protector, and my forever best friend.<br><br>
-May this year bring you happiness, success, and everything you dream of ✨
-</div>
+    for(let i=0; i < sparkleCount; i++) {
+      sparkles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2 + 1,
+        hue: Math.random() * 360,
+        alpha: Math.random() * 0.8 + 0.2,
+        alphaChange: (Math.random() * 0.02 + 0.01) * (Math.random() < 0.5 ? 1 : -1)
+      });
+    }
 
-<script>
-// ---------------- COLORFUL SPARKLES ----------------
-const sparkleCanvas = document.getElementById('sparkleCanvas');
-const ctxS = sparkleCanvas.getContext('2d');
-sparkleCanvas.width = window.innerWidth;
-sparkleCanvas.height = window.innerHeight;
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      sparkles.forEach(sparkle => {
+        sparkle.alpha += sparkle.alphaChange;
+        if (sparkle.alpha <= 0.2 || sparkle.alpha >= 1) {
+          sparkle.alphaChange = -sparkle.alphaChange;
+        }
+        ctx.beginPath();
+        ctx.arc(sparkle.x, sparkle.y, sparkle.r, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${sparkle.hue}, 100%, 70%, ${sparkle.alpha})`;
+        ctx.shadowColor = `hsla(${sparkle.hue}, 100%, 70%, ${sparkle.alpha})`;
+        ctx.shadowBlur = 8;
+        ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
 
-let sparkles = [];
-for(let i=0;i<250;i++){
-  sparkles.push({
-    x: Math.random()*sparkleCanvas.width,
-    y: Math.random()*sparkleCanvas.height,
-    r: Math.random()*2+1,
-    dx: (Math.random()-0.5)*1.5,
-    dy: (Math.random()-0.5)*1.5,
-    color: `hsl(${Math.random()*360},100%,70%)`,
-    alpha: Math.random()*0.8+0.2,
-    deltaAlpha: Math.random()*0.02+0.01
-  });
-}
-
-function drawSparkles(){
-  ctxS.clearRect(0,0,sparkleCanvas.width,sparkleCanvas.height);
-  sparkles.forEach(s=>{
-    ctxS.beginPath();
-    ctxS.arc(s.x,s.y,s.r,0,Math.PI*2);
-    ctxS.fillStyle = `hsla(${Math.random()*360},100%,70%,${s.alpha})`;
-    ctxS.fill();
-
-    s.x += s.dx;
-    s.y += s.dy;
-
-    // twinkle effect
-    s.alpha += s.deltaAlpha;
-    if(s.alpha > 1 || s.alpha < 0.2) s.deltaAlpha *= -1;
-
-    if(s.x<0) s.x=sparkleCanvas.width;
-    if(s.x>sparkleCanvas.width) s.x=0;
-    if(s.y<0) s.y=sparkleCanvas.height;
-    if(s.y>sparkleCanvas.height) s.y=0;
-  });
-  requestAnimationFrame(drawSparkles);
-}
-drawSparkles();
-
-// ---------------- TYPEWRITER EFFECT ----------------
-const text = "🎉 HAPPY BIRTHDAY GOWTHAM 🎉";
-const mainTextDiv = document.getElementById('mainText');
-let index = 0;
-
-function typeLetter(){
-  if(index < text.length){
-    mainTextDiv.textContent += text.charAt(index);
-    index++;
-    setTimeout(typeLetter, 150);
-  } else {
-    setTimeout(showPhotoConfetti, 500);
-  }
-}
-
-setTimeout(()=>{
-  mainTextDiv.style.display='block';
-  typeLetter();
-}, 2000);
-
-// ---------------- CONFETTI ----------------
-const confettiCanvas = document.getElementById('confettiCanvas');
-const ctxC = confettiCanvas.getContext('2d');
-confettiCanvas.width = window.innerWidth;
-confettiCanvas.height = window.innerHeight;
-
-let confetti = [];
-function createConfetti(){
-  for(let i=0;i<150;i++){
-    confetti.push({
-      x: Math.random()*confettiCanvas.width,
-      y: Math.random()*confettiCanvas.height,
-      r: Math.random()*6+2,
-      color: "hsl("+Math.random()*360+",100%,50%)",
-      speed: Math.random()*3+2
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     });
-  }
-}
-function drawConfetti(){
-  ctxC.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
-  confetti.forEach(p=>{
-    ctxC.beginPath();
-    ctxC.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctxC.fillStyle=p.color;
-    ctxC.fill();
-    p.y+=p.speed;
-    if(p.y>confettiCanvas.height){p.y=0;p.x=Math.random()*confettiCanvas.width;}
-  });
-  requestAnimationFrame(drawConfetti);
-}
-
-// ---------------- SHOW PHOTO + CONFETTI ----------------
-function showPhotoConfetti(){
-  document.getElementById('photo').style.display='block';
-  document.getElementById('secretBtn').style.display='inline-block';
-  createConfetti();
-  drawConfetti();
-}
-
-// ---------------- SECRET MESSAGE ----------------
-function showSecret(){
-  document.getElementById('secretMessage').style.display='block';
-}
-</script>
-
+  </script>
 </body>
 </html>
