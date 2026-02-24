@@ -1,71 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Magic Birthday</title>
+<title>Happy Birthday Gowtham</title>
 
 <style>
 body {
-  margin:0;
-  background:black;
-  overflow:hidden;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
+  margin: 0;
+  background: black;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
   font-family: Arial, sans-serif;
-  color:white;
-  flex-direction:column;
+  color: white;
 }
 
-#magicText {
-  font-size:60px;
-  text-align:center;
-  white-space:nowrap;
-  overflow:hidden;
-  border-right:4px solid white;
-  width:0;
-  animation: typing 4s steps(30,end) forwards, blink 0.8s infinite;
-  z-index:2;
+h1 {
+  position: absolute;
+  text-align: center;
+  font-size: 60px;
+  z-index: 2;
+  animation: glow 2s ease-in-out infinite alternate;
 }
 
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
-
-@keyframes blink {
-  50% { border-color: transparent }
+@keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+  }
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #00ffff, 0 0 40px #00ffff;
+  }
 }
 
 canvas {
-  position:absolute;
-  top:0;
-  left:0;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>
 </head>
 
 <body>
 
-<div id="magicText">✨ Happy Birthday Gowtham ✨</div>
+<h1>🎉 Happy Birthday Gowtham 🎉</h1>
 
 <canvas id="fireworks"></canvas>
 
 <script>
 const canvas = document.getElementById("fireworks");
 const ctx = canvas.getContext("2d");
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 let particles = [];
 
 function createFirework() {
-  for (let i = 0; i < 120; i++) {
+  let x = Math.random() * canvas.width;
+  let y = Math.random() * canvas.height / 2;
+
+  for (let i = 0; i < 100; i++) {
     particles.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height/2,
-      speedX: (Math.random()-0.5)*8,
-      speedY: (Math.random()-0.5)*8,
+      x: x,
+      y: y,
+      speedX: (Math.random() - 0.5) * 6,
+      speedY: (Math.random() - 0.5) * 6,
       radius: 2,
       life: 100
     });
@@ -76,23 +76,23 @@ function animate() {
   ctx.fillStyle = "rgba(0,0,0,0.2)";
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  particles.forEach((p,index) => {
+  particles.forEach((p, index) => {
     p.x += p.speedX;
     p.y += p.speedY;
     p.life--;
 
     ctx.beginPath();
-    ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
-    ctx.fillStyle = "hsl(" + Math.random()*360 + ",100%,50%)";
+    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+    ctx.fillStyle = "hsl(" + Math.random() * 360 + ",100%,50%)";
     ctx.fill();
 
-    if (p.life <= 0) particles.splice(index,1);
+    if (p.life <= 0) particles.splice(index, 1);
   });
 
   requestAnimationFrame(animate);
 }
 
-setInterval(createFirework,1200);
+setInterval(createFirework, 1000);
 animate();
 </script>
 
