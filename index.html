@@ -1,71 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday 🎉</title>
-  <link rel="stylesheet" href="style.css">
+<title>Magic Portal</title>
+<style>
+body {
+  margin:0;
+  background:black;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  font-family: 'Poppins', sans-serif;
+  color:white;
+}
+
+h1 {
+  font-size:60px;
+  text-align:center;
+  opacity:0;
+  animation: glow 2s ease-in-out forwards 3s;
+}
+
+@keyframes glow {
+  0% {opacity:0; transform:scale(0.5);}
+  100% {opacity:1; transform:scale(1);}
+}
+
+canvas {
+  position:absolute;
+  top:0;
+  left:0;
+}
+</style>
 </head>
 <body>
 
-<!-- Balloons -->
-<div class="balloon b1"></div>
-<div class="balloon b2"></div>
-<div class="balloon b3"></div>
-<div class="balloon b4"></div>
+<h1>✨ Happy Birthday Gowtham ✨<br>🎉 The Magic Begins 🎉</h1>
 
-<!-- Confetti -->
-<div id="confetti"></div>
-
-<!-- Card -->
-<div class="card">
-  <h1>🎉 Happy Birthday🎂🎉</h1>
-
-  <div class="animations">
-
-  <!-- Cake -->
-<div class="cake">
-<div class="cake-base"></div>
-<div class="cake-cream"></div>
-<div class="candle"></div>
-<div class="flame"></div>
-</div>
-  <!-- Gifts -->
-<div class="gifts">
-    🎁 🎁 🎁
-  </div>
-
-</div>
-  <p class="message">
-    Wishing you a day filled with happiness, love, and sweet surprises 💖🎂🎁
-  </p>
-</div>
-
-<!-- Music -->
-<audio id="music" autoplay loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
-</audio>
+<canvas id="fireworks"></canvas>
 
 <script>
-  // Try to play music automatically
-  const music = document.getElementById("music");
-  music.play().catch(() => {
-    console.log("Autoplay blocked by browser");
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function createFirework() {
+  for (let i = 0; i < 100; i++) {
+    particles.push({
+      x: canvas.width/2,
+      y: canvas.height/2,
+      speedX: (Math.random()-0.5)*6,
+      speedY: (Math.random()-0.5)*6,
+      radius: 2,
+      life: 100
+    });
+  }
+}
+
+function animate() {
+  ctx.fillStyle = "rgba(0,0,0,0.2)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  particles.forEach((p,index) => {
+    p.x += p.speedX;
+    p.y += p.speedY;
+    p.life--;
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+    ctx.fillStyle = "hsl(" + Math.random()*360 + ",100%,50%)";
+    ctx.fill();
+
+    if (p.life <= 0) particles.splice(index,1);
   });
 
-  // Auto confetti
-  const c = document.getElementById("confetti");
-  for (let i = 0; i < 180; i++) {
-    const s = document.createElement("span");
-    s.style.left = Math.random() * 100 + "vw";
-    s.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
-    s.style.animationDuration = (Math.random() * 3 + 2) + "s";
-    c.appendChild(s);
-    setTimeout(() => s.remove(), 6000);
-  }
+  requestAnimationFrame(animate);
+}
+
+createFirework();
+animate();
+setInterval(createFirework,1500);
 </script>
 
 </body>
 </html>
-
-
