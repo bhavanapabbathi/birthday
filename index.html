@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Magic Portal</title>
+<title>Magic Birthday</title>
+
 <style>
 body {
   margin:0;
@@ -11,20 +12,29 @@ body {
   justify-content:center;
   align-items:center;
   height:100vh;
-  font-family: 'Poppins', sans-serif;
+  font-family: Arial, sans-serif;
   color:white;
+  flex-direction:column;
 }
 
-h1 {
+#magicText {
   font-size:60px;
   text-align:center;
-  opacity:0;
-  animation: glow 2s ease-in-out forwards 3s;
+  white-space:nowrap;
+  overflow:hidden;
+  border-right:4px solid white;
+  width:0;
+  animation: typing 4s steps(30,end) forwards, blink 0.8s infinite;
+  z-index:2;
 }
 
-@keyframes glow {
-  0% {opacity:0; transform:scale(0.5);}
-  100% {opacity:1; transform:scale(1);}
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink {
+  50% { border-color: transparent }
 }
 
 canvas {
@@ -34,9 +44,10 @@ canvas {
 }
 </style>
 </head>
+
 <body>
 
-<h1>✨ Happy Birthday Gowtham ✨<br>🎉 The Magic Begins 🎉</h1>
+<div id="magicText">✨ Happy Birthday Gowtham ✨</div>
 
 <canvas id="fireworks"></canvas>
 
@@ -49,12 +60,12 @@ canvas.height = window.innerHeight;
 let particles = [];
 
 function createFirework() {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 120; i++) {
     particles.push({
-      x: canvas.width/2,
-      y: canvas.height/2,
-      speedX: (Math.random()-0.5)*6,
-      speedY: (Math.random()-0.5)*6,
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height/2,
+      speedX: (Math.random()-0.5)*8,
+      speedY: (Math.random()-0.5)*8,
       radius: 2,
       life: 100
     });
@@ -81,9 +92,8 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-createFirework();
+setInterval(createFirework,1200);
 animate();
-setInterval(createFirework,1500);
 </script>
 
 </body>
